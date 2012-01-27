@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = 'python-archive',
-    version = '0.1',
+    version = '0.2dev',
     author = 'Gary Wilson Jr.',
     author_email = 'gary.wilson@gmail.com',
     packages = ['archive', 'archive.test'],
