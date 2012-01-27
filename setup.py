@@ -1,11 +1,11 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name = 'Archive',
     version = '0.2dev',
     author = 'Gary Wilson Jr.',
     author_email = 'gary.wilson@gmail.com',
-    packages = ['archive', 'archive.test'],
+    packages = find_packages(),
     url = 'http://code.google.com/p/python-archive/',
     license = 'LICENSE.txt',
     description = ('Simple library that provides a common interface for'
