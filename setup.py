@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name = 'python-archive',
+    name = 'Archive',
     version = '0.2dev',
     author = 'Gary Wilson Jr.',
     author_email = 'gary.wilson@gmail.com',
