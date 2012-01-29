@@ -3,7 +3,7 @@ import shutil
 import tempfile
 import unittest
 
-from archive import Archive, extract
+from archive import Archive, extract, UnsafeArchive
 
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -70,8 +70,37 @@ class ArchiveTester(object):
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', 'bar', '2')))
 
 
+class EvilArchiveTester(ArchiveTester):
+
+    def test_extract_method(self):
+        self.assertRaises(UnsafeArchive, Archive(self.archive).extract,
+                self.tmpdir, safe=True)
+
+    def test_extract_method_no_to_path(self):
+        os.chdir(self.tmpdir)
+        self.assertRaises(UnsafeArchive, Archive(self.archive_path).extract,
+                safe=True)
+
+    def test_extract_function(self):
+        self.assertRaises(UnsafeArchive, extract, self.archive_path,
+                self.tmpdir, safe=True)
+
+    def test_extract_function_no_to_path(self):
+        os.chdir(self.tmpdir)
+        self.assertRaises(UnsafeArchive, extract, self.archive_path, safe=True)
+
+    def test_namelist_method(self):
+        l = Archive(self.archive).namelist()
+        expected = ['../../../../../../etc/passwd']
+        self.assertEqual([os.path.relpath(p) for p in l], expected)
+
+
 class TestZip(ArchiveTester, unittest.TestCase):
     archive = 'foobar.zip'
+
+
+class TestEvilZip(EvilArchiveTester, unittest.TestCase):
+    archive = 'evil.zip'
 
 
 class TestTar(ArchiveTester, unittest.TestCase):
@@ -80,6 +109,10 @@ class TestTar(ArchiveTester, unittest.TestCase):
 
 class TestGzipTar(ArchiveTester, unittest.TestCase):
     archive = 'foobar.tar.gz'
+
+
+class TestEvilGzipTar(EvilArchiveTester, unittest.TestCase):
+    archive = 'evil.tar.gz'
 
 
 class TestBzip2Tar(ArchiveTester, unittest.TestCase):
