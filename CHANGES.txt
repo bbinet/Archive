@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Version 0.2 - In development
+============================
+* Support for safe extraction
+* Add namelist api method
+* Rename list api method to printdir
+* Use nosetests with coverage
+* Use setuptools instead of distutils
+
 Version 0.1 - 2010-07-27
 ========================
 * Initial release.
