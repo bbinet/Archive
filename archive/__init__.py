@@ -50,8 +50,8 @@ class Archive(object):
     def extract(self, to_path=''):
         self._archive.extract(to_path)
 
-    def list(self):
-        self._archive.list()
+    def printdir(self):
+        self._archive.printdir()
 
 
 class BaseArchive(object):
@@ -62,7 +62,7 @@ class BaseArchive(object):
     def extract(self):
         raise NotImplementedError
 
-    def list(self):
+    def printdir(self):
         raise NotImplementedError
 
 
@@ -71,7 +71,7 @@ class TarArchive(BaseArchive):
     def __init__(self, file):
         self._archive = tarfile.open(file)
 
-    def list(self, *args, **kwargs):
+    def printdir(self, *args, **kwargs):
         self._archive.list(*args, **kwargs)
 
     def extract(self, to_path):
@@ -84,7 +84,7 @@ class ZipArchive(BaseArchive):
     def __init__(self, file):
         self._archive = zipfile.ZipFile(file)
 
-    def list(self, *args, **kwargs):
+    def printdir(self, *args, **kwargs):
         self._archive.printdir(*args, **kwargs)
 
     def extract(self, to_path):
