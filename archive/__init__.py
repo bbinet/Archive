@@ -9,13 +9,17 @@ class ArchiveException(Exception):
 class UnrecognizedArchiveFormat(ArchiveException):
     """Error raised when passed file is not a recognized archive format."""
 
+class UnsafeArchive(ArchiveException):
+    """Error raised when passed file contains absolute paths which could be
+    extracted outside of the target directory."""
 
-def extract(path, to_path=''):
+
+def extract(path, to_path='', safe=False):
     """
     Unpack the tar or zip file at the specified path to the directory
     specified by to_path.
     """
-    Archive(path).extract(to_path)
+    Archive(path).extract(to_path, safe)
 
 
 class Archive(object):
@@ -47,7 +51,14 @@ class Archive(object):
                 "Path not a recognized archive format: %s" % filename)
         return cls
 
-    def extract(self, to_path=''):
+    def extract(self, to_path='', safe=False):
+        if safe:
+            to_abspath = os.path.abspath(to_path)
+            for name in self._archive.namelist():
+                dest = os.path.join(to_path, name)
+                if not os.path.abspath(dest).startswith(to_abspath):
+                    raise UnsafeArchive("Unsafe destination path " \
+                            "(outside of the target directory)")
         self._archive.extract(to_path)
 
     def namelist(self):
@@ -83,7 +94,7 @@ class TarArchive(BaseArchive):
     def namelist(self, *args, **kwargs):
         return self._archive.getnames(*args, **kwargs)
 
-    def extract(self, to_path):
+    def extract(self, to_path=''):
         self._archive.extractall(to_path)
 
 
@@ -98,7 +109,7 @@ class ZipArchive(BaseArchive):
     def namelist(self, *args, **kwargs):
         return self._archive.namelist(*args, **kwargs)
 
-    def extract(self, to_path):
+    def extract(self, to_path='', safe=False):
         self._archive.extractall(to_path)
 
 
