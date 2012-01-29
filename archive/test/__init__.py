@@ -45,6 +45,22 @@ class ArchiveTester(object):
         extract(self.archive_path)
         self.check_files(self.tmpdir)
 
+    def test_namelist_method(self):
+        l = Archive(self.archive).namelist()
+        expected = [
+                '1',
+                '2',
+                'foo',
+                'foo/1',
+                'foo/2',
+                'foo/bar',
+                'foo/bar/1',
+                'foo/bar/2']
+        if self.archive != 'foobar.zip':
+            # namelist result contains '.' except for the zip file
+            expected.insert(0, '.')
+        self.assertEqual([os.path.relpath(p) for p in l], expected)
+
     def check_files(self, tmpdir):
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, '1')))
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, '2')))
