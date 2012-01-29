@@ -28,6 +28,14 @@ Using the ``extract`` convenience function::
     # Extract in directory 'unpack_dir'.
     extract('files.tar.gz', 'unpack_dir')
 
+Note that calling extract with ``safe=True`` will ensure that the archive is
+safe prior to extraction: ``UnsafeArchive`` exception will be raised when
+archive contains paths which would be extracted outside of the target
+directory (e.g. absolute paths)::
+
+    # Safely extract in directory 'unpack_dir'.
+    extract('files.tar.gz', 'unpack_dir', safe=True)
+
 
 Similar tools
 =============
