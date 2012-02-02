@@ -2,8 +2,8 @@
 Changelog
 =========
 
-Version 0.2 - In development
-============================
+Version 0.2 - 2012-02-02
+========================
 * Support for safe extraction
 * Add namelist api method
 * Rename list api method to printdir
