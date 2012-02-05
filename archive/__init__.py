@@ -86,7 +86,8 @@ class BaseArchive(object):
 class TarArchive(BaseArchive):
 
     def __init__(self, file):
-        self._archive = tarfile.open(file)
+        self._archive = tarfile.open(file) if isinstance(file, basestring) \
+                else tarfile.open(fileobj=file)
 
     def printdir(self, *args, **kwargs):
         self._archive.list(*args, **kwargs)
