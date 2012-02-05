@@ -34,7 +34,7 @@ class ArchiveTester(BaseArchiveTester):
         Archive(self.archive).extract(self.tmpdir)
         self.check_files(self.tmpdir)
 
-    def test_extract_fileobject(self):
+    def test_extract_method_fileobject(self):
         f = open(self.archive)
         Archive(f).extract(self.tmpdir)
         self.check_files(self.tmpdir)
@@ -46,6 +46,11 @@ class ArchiveTester(BaseArchiveTester):
 
     def test_extract_function(self):
         extract(self.archive_path, self.tmpdir)
+        self.check_files(self.tmpdir)
+
+    def test_extract_function_fileobject(self):
+        f = open(self.archive_path)
+        extract(f, self.tmpdir)
         self.check_files(self.tmpdir)
 
     def test_extract_function_no_to_path(self):
@@ -84,7 +89,7 @@ class EvilArchiveTester(ArchiveTester):
         self.assertRaises(UnsafeArchive, Archive(self.archive).extract,
                 self.tmpdir, safe=True)
 
-    def test_extract_fileobject(self):
+    def test_extract_method_fileobject(self):
         f = open(self.archive)
         self.assertRaises(UnsafeArchive, Archive(f).extract, self.tmpdir,
                 safe=True)
@@ -97,6 +102,10 @@ class EvilArchiveTester(ArchiveTester):
     def test_extract_function(self):
         self.assertRaises(UnsafeArchive, extract, self.archive_path,
                 self.tmpdir, safe=True)
+
+    def test_extract_function_fileobject(self):
+        f = open(self.archive_path)
+        self.assertRaises(UnsafeArchive, extract, f, self.tmpdir, safe=True)
 
     def test_extract_function_no_to_path(self):
         os.chdir(self.tmpdir)
