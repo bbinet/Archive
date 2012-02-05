@@ -27,6 +27,14 @@ class BaseArchiveTester(object):
         """
         shutil.rmtree(self.tmpdir)
 
+    def check_files(self, tmpdir):
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, '1')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, '2')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', '1')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', '2')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', 'bar', '1')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', 'bar', '2')))
+
 
 class ArchiveTester(BaseArchiveTester):
 
@@ -74,16 +82,8 @@ class ArchiveTester(BaseArchiveTester):
             expected.insert(0, '.')
         self.assertEqual([os.path.relpath(p) for p in l], expected)
 
-    def check_files(self, tmpdir):
-        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, '1')))
-        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, '2')))
-        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', '1')))
-        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', '2')))
-        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', 'bar', '1')))
-        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'foo', 'bar', '2')))
 
-
-class EvilArchiveTester(ArchiveTester):
+class EvilArchiveTester(BaseArchiveTester):
 
     def test_extract_method(self):
         self.assertRaises(UnsafeArchive, Archive(self.archive).extract,
