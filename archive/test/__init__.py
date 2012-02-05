@@ -3,13 +3,13 @@ import shutil
 import tempfile
 import unittest
 
-from archive import Archive, extract, UnsafeArchive
+from archive import Archive, extract, UnsafeArchive, UnrecognizedArchiveFormat
 
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class ArchiveTester(object):
+class BaseArchiveTester(object):
     archive = None
 
     def setUp(self):
@@ -26,6 +26,9 @@ class ArchiveTester(object):
         Clean up temporary directory.
         """
         shutil.rmtree(self.tmpdir)
+
+
+class ArchiveTester(BaseArchiveTester):
 
     def test_extract_method(self):
         Archive(self.archive).extract(self.tmpdir)
@@ -105,6 +108,13 @@ class EvilArchiveTester(ArchiveTester):
         self.assertEqual([os.path.relpath(p) for p in l], expected)
 
 
+
+class NoExtArchiveTester(BaseArchiveTester):
+
+    def test_constructor(self):
+        self.assertRaises(UnrecognizedArchiveFormat, Archive, self.archive)
+
+
 class TestZip(ArchiveTester, unittest.TestCase):
     archive = 'foobar.zip'
 
@@ -119,6 +129,14 @@ class TestTar(ArchiveTester, unittest.TestCase):
 
 class TestGzipTar(ArchiveTester, unittest.TestCase):
     archive = 'foobar.tar.gz'
+
+
+class TestGzipTarNoExt(NoExtArchiveTester, unittest.TestCase):
+    archive = 'foobar_targz'
+
+
+class TestZipNoExt(NoExtArchiveTester, unittest.TestCase):
+    archive = 'foobar_zip'
 
 
 class TestEvilGzipTar(EvilArchiveTester, unittest.TestCase):
