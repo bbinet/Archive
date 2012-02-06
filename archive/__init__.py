@@ -14,12 +14,12 @@ class UnsafeArchive(ArchiveException):
     extracted outside of the target directory."""
 
 
-def extract(path, to_path='', safe=False):
+def extract(path, to_path='', safe=False, filename=None):
     """
     Unpack the tar or zip file at the specified path to the directory
     specified by to_path.
     """
-    Archive(path).extract(to_path, safe)
+    Archive(path, filename).extract(to_path, safe)
 
 
 class Archive(object):
@@ -27,20 +27,21 @@ class Archive(object):
     The external API class that encapsulates an archive implementation.
     """
 
-    def __init__(self, file):
-        self._archive = self._archive_cls(file)(file)
+    def __init__(self, file, filename=None):
+        self._archive = self._archive_cls(file, filename)(file)
 
     @staticmethod
-    def _archive_cls(file):
+    def _archive_cls(file, filename=None):
         cls = None
-        if isinstance(file, basestring):
-            filename = file
-        else:
-            try:
-                filename = file.name
-            except AttributeError:
-                raise UnrecognizedArchiveFormat(
-                    "File object not a recognized archive format.")
+        if not filename:
+            if isinstance(file, basestring):
+                filename = file
+            else:
+                try:
+                    filename = file.name
+                except AttributeError:
+                    raise UnrecognizedArchiveFormat(
+                        "File object not a recognized archive format.")
         base, tail_ext = os.path.splitext(filename.lower())
         cls = extension_map.get(tail_ext)
         if not cls:

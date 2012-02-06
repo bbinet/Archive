@@ -123,6 +123,14 @@ class NoExtArchiveTester(BaseArchiveTester):
     def test_constructor(self):
         self.assertRaises(UnrecognizedArchiveFormat, Archive, self.archive)
 
+    def test_extract_method_filename(self):
+        Archive(self.archive, filename=self.filename).extract(self.tmpdir)
+        self.check_files(self.tmpdir)
+
+    def test_extract_function_filename(self):
+        extract(self.archive_path, self.tmpdir, filename=self.filename)
+        self.check_files(self.tmpdir)
+
 
 class TestZip(ArchiveTester, unittest.TestCase):
     archive = 'foobar.zip'
@@ -142,10 +150,12 @@ class TestGzipTar(ArchiveTester, unittest.TestCase):
 
 class TestGzipTarNoExt(NoExtArchiveTester, unittest.TestCase):
     archive = 'foobar_targz'
+    filename = 'foobar.tar.gz'
 
 
 class TestZipNoExt(NoExtArchiveTester, unittest.TestCase):
     archive = 'foobar_zip'
+    filename = 'foobar.zip'
 
 
 class TestEvilGzipTar(EvilArchiveTester, unittest.TestCase):
