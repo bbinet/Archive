@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 0.3 - 2012-02-06
+========================
+* Archive constructor can now take a 'filename' optionnal argument.
+  This can be useful when opening files with no valid extension
+* Add some more tests
+* Fix file-like object support and test it
+
 Version 0.2 - 2012-02-02
 ========================
 * Support for safe extraction
